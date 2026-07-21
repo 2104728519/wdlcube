@@ -8,22 +8,22 @@
 
 <table>
   <tr>
-    <td><img src="screenshots/1.jpg" width="1240" alt="演示"/></td>
-    <td><img src="screenshots/2.jpg" width="1240" alt="解步"/></td>
+    <td><img src="screenshots/5.jpg" width="1240" alt="演示"/></td>
+    <td><img src="screenshots/4.jpg" width="1240" alt="解步"/></td>
     <td><img src="screenshots/3.jpg" width="1240" alt="ai扫描"/></td>
-    <td><img src="screenshots/4.jpg" width="1240" alt="经典扫描"/></td>
-    <td><img src="screenshots/5.jpg" width="1240" alt="主界面"/></td>
+    <td><img src="screenshots/2.jpg" width="1240" alt="经典扫描"/></td>
+    <td><img src="screenshots/1.jpg" width="1240" alt="主界面"/></td>
   </tr>
   <tr>
     <td align="center"><b>主界面</b></td>
-    <td align="center"><b>AI 扫色</b></td>
-    <td align="center"><b>多状态比对</b></td>
-    <td align="center"><b>控制台与微调</b></td>
-    <td align="center"><b>3D 演示播放</b></td>
+    <td align="center"><b>经典扫描</b></td>
+    <td align="center"><b>ai扫描</b></td>
+    <td align="center"><b>解步</b></td>
+    <td align="center"><b>演示</b></td>
   </tr>
 </table>
 
-*(注：您可以在 3D 播放器中通过单指滑动旋转整体视角，双指旋转平面视角，双击重置默认视角。)*
+*(3D 模型可以单指滑动旋转整体视角，双指旋转平面视角，双击重置默认视角。)*
 
 ---
 
