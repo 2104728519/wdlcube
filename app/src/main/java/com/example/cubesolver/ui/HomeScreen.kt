@@ -1,6 +1,8 @@
 package com.example.cubesolver.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,16 +18,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.cubesolver.utils.ScrambleUtils
+import com.example.cubesolver.utils.CubeSolver
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     onStartScan: (ScanMode) -> Unit,
     onStartScramble: (List<List<Color>>, String) -> Unit
 ) {
     val uriHandler = LocalUriHandler.current
+    val scope = rememberCoroutineScope()
 
     val standardFaces = remember {
         listOf(
@@ -136,18 +140,36 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedButton(
-                onClick = {
-                    val formula = ScrambleUtils.generateScrambleFormula(20)
-                    val scrambledFaces = ScrambleUtils.getScrambledState(formula)
-                    onStartScramble(scrambledFaces, formula)
-                },
-                modifier = Modifier.fillMaxWidth().height(64.dp),
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp),
                 shape = RoundedCornerShape(16.dp),
                 border = androidx.compose.foundation.BorderStroke(2.dp, Color.White),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
+                color = Color.Transparent,
+                contentColor = Color.White
             ) {
-                Text("随机打乱", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .combinedClickable(
+                            onClick = {
+                                scope.launch {
+                                    val result = CubeSolver.generateRandomScramble()
+                                    if (result != null) onStartScramble(result.first, result.second)
+                                }
+                            },
+                            onLongClick = {
+                                scope.launch {
+                                    val result = CubeSolver.generateSuperFlip()
+                                    if (result != null) onStartScramble(result.first, result.second)
+                                }
+                            }
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("随机打乱", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                }
             }
 
             Spacer(modifier = Modifier.height(48.dp))

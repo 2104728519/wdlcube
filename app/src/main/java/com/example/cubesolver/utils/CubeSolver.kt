@@ -47,11 +47,58 @@ object CubeSolver {
         callback: SearchCallback?
     ): String
 
+    private external fun randomCubeNative(): String
+
+    private external fun superFlipNative(): String
+
     private val faceLabels = listOf('U', 'R', 'F', 'D', 'L', 'B')
+
+    // 标准配色映射
+    private val standardColorMap = mapOf(
+        'U' to Color(0xFFFFFFFF),
+        'R' to Color(0xFFD32F2F),
+        'F' to Color(0xFF388E3C),
+        'D' to Color(0xFFFBC02D),
+        'L' to Color(0xFFF57C00),
+        'B' to Color(0xFF1976D2)
+    )
 
     suspend fun asyncInit(context: Context) = withContext(Dispatchers.IO) {
         val cacheFile = File(context.cacheDir, "min2phase_cache.bin")
         initNative(cacheFile.absolutePath)
+    }
+
+    /**
+     * 生成真正的随机状态打乱
+     */
+    suspend fun generateRandomScramble(): Pair<List<List<Color>>, String> = withContext(Dispatchers.Default) {
+        val facelets = randomCubeNative()
+        parseFacelets(facelets)
+    }
+
+    /**
+     * 生成 SuperFlip 状态
+     */
+    suspend fun generateSuperFlip(): Pair<List<List<Color>>, String> = withContext(Dispatchers.Default) {
+        val facelets = superFlipNative()
+        parseFacelets(facelets)
+    }
+
+    private fun parseFacelets(facelets: String): Pair<List<List<Color>>, String> {
+        // 解析 facelets 字符串为 UI 使用的颜色列表
+        val faces = mutableListOf<List<Color>>()
+        for (i in 0 until 6) {
+            val face = mutableListOf<Color>()
+            for (j in 0 until 9) {
+                face.add(standardColorMap[facelets[i * 9 + j]] ?: Color.Gray)
+            }
+            faces.add(face)
+        }
+
+        // 获取该状态的解法，作为“打乱公式”展示
+        val solution = solveNative(facelets, 21, 1000000, 0, 0, null)
+
+        return Pair(faces, solution)
     }
 
     suspend fun solve(

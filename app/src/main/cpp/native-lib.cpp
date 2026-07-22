@@ -2,6 +2,7 @@
 #include <string>
 #include <android/log.h>
 #include <min2phase/min2phase.h>
+#include <min2phase/tools.h>
 
 #define LOG_TAG "CubeSolverNative"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
@@ -18,7 +19,7 @@ private:
     jmethodID m_onNewSolutionFoundId;
     jmethodID m_isCancelledId;
 
-    // 获取或附着当前线程的 JNIEnv
+    // 获取或附着当前线程 of the JNIEnv
     JNIEnv* getEnv(bool& mustDetach) {
         JNIEnv* env = nullptr;
         if (g_vm == nullptr) {
@@ -162,6 +163,16 @@ Java_com_example_cubesolver_utils_CubeSolver_solveNative(
     }
 
     return env->NewStringUTF(result.c_str());
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_example_cubesolver_utils_CubeSolver_randomCubeNative(JNIEnv *env, jobject thiz) {
+    return env->NewStringUTF(min2phase::tools::randomCube().c_str());
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_example_cubesolver_utils_CubeSolver_superFlipNative(JNIEnv *env, jobject thiz) {
+    return env->NewStringUTF(min2phase::tools::superFlip().c_str());
 }
 
 } // extern "C"
